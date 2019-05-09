@@ -54,7 +54,7 @@ ENV LANG=en_US.UTF-8
 COPY defaultconfigs/ start-service.sh start-softlink.sh /kopano/
 
 # create softlinks to service start handlers
-RUN for service in $( ls /kopano/*.py | xargs basename -a -s .py ); do ln -s /kopano/start-softlink.sh /usr/local/bin/start-${service}; done
+RUN for service in $( ls /kopano/*.py | xargs basename -a -s .py ); do ln -s /kopano/start-softlink.sh "/usr/local/bin/start-${service}"; done
 
 WORKDIR /kopano/path
 
