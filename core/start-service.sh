@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SERVICE_TO_START=$1
+
 ADDITIONAL_KOPANO_PACKAGES=${ADDITIONAL_KOPANO_PACKAGES:-""}
 KCCONF_SERVER_MYSQL_SOCKET=${KCCONF_SERVER_MYSQL_SOCKET:-""}
 
@@ -29,12 +31,6 @@ chown kopano:kopano /kopano/data/ /kopano/data/attachments
 
 # ensure removed pid-file on unclean shutdowns and mounted volumes
 rm -f /var/run/kopano/"$SERVICE_TO_START".pid
-
-# allow helper commands given by "docker-compose run"
-if [ $# -gt 0 ]; then
-	exec "$@"
-	exit
-fi
 
 # start regular service
 case "$SERVICE_TO_START" in

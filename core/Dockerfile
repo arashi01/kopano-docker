@@ -51,15 +51,17 @@ ENV KOPANO_LOCALE="de_DE.UTF-8"
 ENV KOPANO_USERSCRIPT_LOCALE="de_DE.UTF-8"
 ENV LANG=en_US.UTF-8
 
-ENV SERVICE_TO_START=server
+COPY defaultconfigs/ start-service.sh start-softlink.sh /kopano/
 
-COPY defaultconfigs/ start-service.sh /kopano/
+# create softlinks to service start handlers
+RUN for service in $( ls /kopano/*.py | xargs basename -a -s .py ); do ln -s /kopano/start-softlink.sh /usr/local/bin/start-${service}; done
 
 WORKDIR /kopano/path
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
-CMD [ "/kopano/start-service.sh" ]
+# by default start core server
+CMD [ "start-server" ]
 
 HEALTHCHECK --interval=5m --timeout=60s \
 	CMD /kopano/healthcheck.sh
