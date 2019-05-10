@@ -51,10 +51,10 @@ ENV KOPANO_LOCALE="de_DE.UTF-8"
 ENV KOPANO_USERSCRIPT_LOCALE="de_DE.UTF-8"
 ENV LANG=en_US.UTF-8
 
-COPY defaultconfigs/ start-service.sh start-softlink.sh /kopano/
+COPY defaultconfigs/ start-service.sh start-by-symlink.sh kopano/
 
 # create softlinks to service start handlers
-RUN for service in $( find /kopano/ -maxdepth 1 -name '*.py' -printf "%f\\n" ); do ln -s /kopano/start-softlink.sh "/usr/local/bin/start-${service%.py}"; done
+RUN find /kopano/ -maxdepth 1 -name '*.py' -printf "%f\\0" | cut -z -f 1 -d '.' | xargs -0 -i ln -s /kopano/start-by-symlink.sh "/usr/local/bin/start-{}"
 
 WORKDIR /kopano/path
 
